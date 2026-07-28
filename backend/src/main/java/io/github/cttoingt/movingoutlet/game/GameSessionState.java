@@ -31,7 +31,7 @@ public final class GameSessionState {
     private double outletVelocityY;
     private int score;
     private int combo;
-    private long remainingMillis;
+    private long remainingMillis = ROUND_DURATION_MS;
     private long comboRemainingMillis;
     private String event = "READY";
     private long eventSequence;
