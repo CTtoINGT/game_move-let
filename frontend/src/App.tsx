@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { GameCanvas } from '@/components/game-canvas'
+import { SparkBurst } from '@/components/spark-burst'
+import { useGameFeedback } from '@/hooks/use-game-feedback'
 import { useGameSocket } from '@/hooks/use-game-socket'
 
 const playableKeys = new Set(['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'])
@@ -18,6 +20,7 @@ function eventLabel(event: string) {
 
 function App() {
   const { connected, snapshot, start, restart, sendInput } = useGameSocket()
+  const { activateSound, burstKey, soundEnabled } = useGameFeedback(snapshot)
   const heldKeys = useRef(new Set<string>())
 
   useEffect(() => {
@@ -86,6 +89,7 @@ function App() {
 
             <div className="relative">
               <GameCanvas snapshot={snapshot} />
+              <SparkBurst burstKey={burstKey} />
               <div className="pointer-events-none absolute inset-x-3 bottom-3 rounded-xl border-2 border-dashed border-[#fff1b8]/70 bg-[#161326]/80 px-3 py-2 text-center font-black text-sm sm:text-base">
                 {eventLabel(snapshot.event)}
               </div>
@@ -96,10 +100,22 @@ function App() {
               <Button
                 type="button"
                 disabled={!connected}
-                onClick={snapshot.status === 'PLAYING' ? undefined : snapshot.status === 'FINISHED' ? restart : start}
+                onClick={() => {
+                  activateSound()
+                  if (snapshot.status === 'FINISHED') restart()
+                  if (snapshot.status === 'IDLE') start()
+                }}
                 className="h-11 rounded-xl border-2 border-[#fff1b8] bg-[#ff6b6b] px-5 font-black text-white shadow-[4px_4px_0_#fff1b8] hover:bg-[#ff847c]"
               >
                 {snapshot.status === 'FINISHED' ? 'もう一回！' : snapshot.status === 'PLAYING' ? 'PLAYING...' : 'ゲーム開始'}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={activateSound}
+                className="h-11 rounded-xl border-2 border-[#fff1b8] bg-[#27214b] px-4 font-black text-[#fff1b8] hover:bg-[#514a70]"
+              >
+                {soundEnabled ? 'SOUND ON' : 'SOUND OFF'}
               </Button>
             </div>
           </CardContent>

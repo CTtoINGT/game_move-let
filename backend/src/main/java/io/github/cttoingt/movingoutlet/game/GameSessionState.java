@@ -34,6 +34,7 @@ public final class GameSessionState {
     private long remainingMillis;
     private long comboRemainingMillis;
     private String event = "READY";
+    private long eventSequence;
 
     public GameSessionState() {
         this(new Random());
@@ -56,7 +57,7 @@ public final class GameSessionState {
         heldKeys.clear();
         placeOutletAwayFromPlayer();
         setOutletDirection();
-        event = "START";
+        raiseEvent("START");
     }
 
     public synchronized void updateHeldKeys(Set<String> keys) {
@@ -86,7 +87,7 @@ public final class GameSessionState {
         if (remainingMillis == 0) {
             status = GameStatus.FINISHED;
             heldKeys.clear();
-            event = "TIME_UP";
+            raiseEvent("TIME_UP");
         }
     }
 
@@ -101,7 +102,8 @@ public final class GameSessionState {
                 combo,
                 remainingMillis,
                 comboRemainingMillis,
-                event
+                event,
+                eventSequence
         );
     }
 
@@ -151,7 +153,7 @@ public final class GameSessionState {
         combo = comboRemainingMillis > 0 ? combo + 1 : 1;
         comboRemainingMillis = COMBO_WINDOW_MS;
         score += 100 * combo;
-        event = combo >= 5 ? "JACKPOT" : "CAPTURE";
+        raiseEvent(combo >= 5 ? "JACKPOT" : "CAPTURE");
         placeOutletAwayFromPlayer();
         setOutletDirection();
     }
@@ -175,6 +177,11 @@ public final class GameSessionState {
         double speed = BASE_OUTLET_SPEED_PER_SECOND + Math.min(combo, 10) * OUTLET_SPEED_PER_COMBO;
         outletVelocityX = Math.cos(angle) * speed;
         outletVelocityY = Math.sin(angle) * speed;
+    }
+
+    private void raiseEvent(String nextEvent) {
+        event = nextEvent;
+        eventSequence++;
     }
 
     private static double clamp(double value, double min, double max) {

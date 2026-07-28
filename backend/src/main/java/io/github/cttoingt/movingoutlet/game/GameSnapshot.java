@@ -10,6 +10,7 @@ public record GameSnapshot(
         int combo,
         long remainingMillis,
         long comboRemainingMillis,
-        String event
+        String event,
+        long eventSequence
 ) {
 }

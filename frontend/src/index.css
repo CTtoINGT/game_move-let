@@ -24,3 +24,12 @@ body {
 button {
   font: inherit;
 }
+
+@keyframes spark-burst {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.2) rotate(0deg); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--spark-x)), calc(-50% + var(--spark-y))) scale(1.25) rotate(100deg); }
+}
+
+.spark-burst {
+  animation: spark-burst 620ms cubic-bezier(.15,.8,.25,1) both;
+}

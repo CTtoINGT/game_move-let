@@ -11,6 +11,7 @@ export type GameSnapshot = {
   remainingMillis: number
   comboRemainingMillis: number
   event: string
+  eventSequence: number
 }
 
 export const emptySnapshot: GameSnapshot = {
@@ -24,4 +25,5 @@ export const emptySnapshot: GameSnapshot = {
   remainingMillis: 60_000,
   comboRemainingMillis: 0,
   event: 'READY',
+  eventSequence: 0,
 }
