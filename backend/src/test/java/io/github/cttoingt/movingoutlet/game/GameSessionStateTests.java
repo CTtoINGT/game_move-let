@@ -8,6 +8,13 @@ import org.junit.jupiter.api.Test;
 class GameSessionStateTests {
 
     @Test
+    void showsTheFullRoundDurationBeforeStarting() {
+        GameSessionState state = new GameSessionState();
+
+        assertThat(state.snapshot().remainingMillis()).isEqualTo(60_000);
+    }
+
+    @Test
     void capturesOutletAndStartsCombo() {
         GameSessionState state = new GameSessionState();
         state.start();

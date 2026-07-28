@@ -13,3 +13,6 @@ frontend/dist/
 .DS_Store
 .idea/
 .vscode/
+
+# Local browser verification artifacts
+.playwright-cli/
